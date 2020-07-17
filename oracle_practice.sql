@@ -1,0 +1,78 @@
+select 'hello' ||' world' from dual;
+
+SELECT CONCAT(CONCAT('HELLO', ' WORLD!!'), '!!')
+FROM DUAL;
+
+SELECT 'HELLO' || ' WORLD' || '!!'
+FROM DUAL
+;
+
+SELECT SUBSTR('HELLO WORLD!!', 3, 1) --자바와 달리 맨앞에 0이 아니라 1로 인식됨 
+FROM DUAL--LL (3번째부터 숫자 2만큼)
+;
+
+SELECT INSTR ('HELLO WORLD!!', 'L', -4) 
+FROM DUAL
+;
+
+SELECT REPLACE ('HELLO WORLD!!', 'L', 'K') FROM DUAL;
+
+SELECT LENGTH('HELLO WORLD!!') 
+FROM DUAL
+;
+
+SELECT SYSDATE 
+FROM DUAL 
+;
+
+SELECT TO_CHAR (SYSDATE, 'YYYY-MM-DD DAY AM HH24:MI:SS')
+FROM DUAL
+;
+
+SELECT TO_DATE('2020-05-05')
+FROM DUAL
+;
+SELECT TO_CHAR (SYSDATE, 'YYYY')||'년 '||TO_CHAR (SYSDATE, 'IW')||'주차 '
+||TO_CHAR (SYSDATE, 'MM')||'월 
+'||TO_CHAR (SYSDATE, 'W')||'주차 '
+||TO_CHAR (SYSDATE, 'Q')||'사분기'
+FROM DUAL
+;
+SELECT TO_CHAR(1234567.891234, '999,999,999,999,999,999.99')
+FROM DUAL
+;
+-- 1,234,567.89
+
+SELECT TO_CHAR(1234567, '$999,999,999,999,999.99')
+FROM DUAL
+;-- $1,234,567.00 (단 통화기호와 숫자는 꼭 붙어있어야 한다)
+
+SELECT REGEXP_REPLACE(ENAME, '[a-z[:space:]]', '') -- 이렇게 겹쳐도 되는데 오라클 버전이나 프로그램 따라 안먹을 수도 있다. 
+FROM EMP
+;
+
+SELECT REGEXP_REPLACE(ENAME, '[A-Z[:space:]]', '') -- 이렇게 겹쳐도 되는데 오라클 버전이나 프로그램 따라 안먹을 수도 있다. 
+FROM EMP
+;
+
+SELECT ENAME, JOB, SAL, 
+    CASE WHEN SAL<=1500
+    THEN SAL*1.2
+    ELSE SAL*0.8
+    END AS RSAL
+    FROM EMP;
+
+SELECT * FROM EMP;
+
+SELECT ENAME, JOB, SAL,
+    CASE WHEN JOB='CLERK'
+        THEN SAL*1.2
+         WHEN JOB='SALESMAN'
+        THEN SAL*1.1
+    ELSE SAL*0.9
+    end
+    FROM EMP;
+    
+
+
+
