@@ -179,6 +179,92 @@ SELECT ENAME, JOB, SAL, USAL, RNK
                 WHERE RNK=1
 ;
 
+select DEPTNO FROM DEPT;
+
+select DEPTNO FROM EMP;
+
+SELECT DEPTNO, COUNT(*) AS 인원수
+FROM EMP
+GROUP BY DEPTNO
+ORDER BY DEPTNO;
+
+SELECT DEPTNO, 인원수
+FROM (
+   SELECT DEPTNO, COUNT(*) 인원수, RANK() OVER(
+                                        ORDER BY COUNT(*) DESC) AS RNK 
+                                        FROM EMP
+                                        GROUP BY DEPTNO
+) WHERE RNK=1
+;
+
+SELECT DEPTNO, COUNT(*) 인원수, RANK() OVER(
+                                        ORDER BY COUNT(*) DESC) AS RNK 
+                                        FROM EMP
+                                        GROUP BY DEPTNO;
+                                        
+SELECT DEPTNO
+FROM EMP
+GROUP BY DEPTNO
+HAVING COUNT(*) = (SELECT MAX(COUNT(*))
+                                        FROM EMP
+                                        GROUP BY DEPTNO)
+;
+
+SELECT DEPTNO, COUNT(*) AS 직원수
+FROM EMP
+GROUP BY DEPTNO
+HAVING COUNT(*)=(SELECT MAX(COUNT(*))
+                        FROM EMP
+                        GROUP BY DEPTNO);
+select avg(sal) as 평균 from(                     
+SELECT ENAME, SAL, DEPTNO, RANK()OVER(
+                    PARTITION BY DEPTNO
+                    ORDER BY SAL) AS RNK
+                    FROM EMP
+                )
+where rnk=2;
+
+select * from(                     
+SELECT ENAME, SAL, DEPTNO, RANK()OVER(
+                    PARTITION BY DEPTNO
+                    ORDER BY SAL) AS RNK
+                    FROM EMP
+                )
+where rnk=2;
+                    
+SELECT * FROM EMP;
+
+SELECT * FROM(
+SELECT TO_CHAR(HIREDATE,'MM') AS 월, COUNT(*) 입사자수, SUM(SAL) 급여총합, RANK()OVER(
+                                                        ORDER BY COUNT(*) DESC
+                                                        ) AS RNK
+                        FROM EMP
+                        GROUP BY TO_CHAR(HIREDATE,'MM')
+                        ORDER BY RNK
+)
+WHERE RNK=1
+;
+
+SELECT * FROM EMP;
+
+SELECT * FROM DEPT;
+
+SELECT ENAME, SAL, LOC
+FROM EMP E INNER JOIN DEPT D
+ON E.DEPTNO = D.DEPTNO;
+
+SELECT ENAME, SAL, LOC
+FROM EMP E, DEPT D
+WHERE E.DEPTNO=D.DEPTNO;
+
+SELECT E.ENAME, E.DEPTNO, D.DNAME
+FROM EMP E LEFT OUTER JOIN DEPT D
+                ON E.DEPTNO=D.DEPTNO
+--                AND E.DEPTNO!=30
+                ;
+
+
+
 
 
 
