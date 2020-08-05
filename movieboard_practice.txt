@@ -1,0 +1,39 @@
+create table mov_guinfo(
+	mg_id varchar2(20) primary key,
+	mg_pass varchar2(20) not null,
+	mg_name varchar2(15) not null,
+	mg_juso1 varchar2(70) not null,
+	mg_juso2 varchar2(70) not null,
+	mg_birth date not null,
+	mg_tel number(20) not null
+);
+
+commit;
+
+create table mov_review(
+	mrv_code number(4) primary key,
+	mrv_id varchar2(20) not null,
+	mrv_title varchar2(100) not null,
+	mrv_content varchar2(1000) not null,
+	mrv_img varchar2(30) null
+);
+
+commit;
+
+
+create table mov_repl(
+	mrp_code number(4) not null,	
+	mrp_date date not null,
+	mrp_content varchar2(100) not null,
+	mrp_num number(4) primary key
+);
+
+alter table  mov_repl add   constraint  repl_review_fk 
+  foreign key(mrp_code) references  mov_review (mrv_code)
+	on delete cascade;
+commit ;  
+
+
+
+
+
