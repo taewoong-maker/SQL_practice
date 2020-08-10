@@ -87,21 +87,76 @@ inner join salgrade s on
 e.sal<=1500 and e.sal between
 e.sal in (mod(s.grade,2)=1);
 
-select case when mod(s.grade,2)=1 and   e.sal<=1500
-        then sal*1.2
+select * from emp;
 
+select * from grade;
 
+select count(ename) cnt
+from emp e inner join grade g
+on g.grade=2 and e.sal between g.losal and g.hisal;
+
+--급여 등급이 2등급인 사원의 사원수를 구하시오 
+select count(ename) cnt
+from emp e inner join grade g
+on e.sal between g.losal and g.hisal
+where g.grade=2
+;
 
 select * from emp;
 
+select * from dept;
 
 
+--DALLAS에 근무하는 사원들의 급여 순위 
+select e.ename, e.sal, d.deptno, d.loc,
+        row_number() over(order by e.sal desc) as 순서
+            from emp e inner join dept d
+            on e.deptno = d.deptno
+            where d.deptno = 20;            
+            
+select e.ename, e.sal, d.deptno, d.loc,
+        rank() over(order by e.sal desc) as 순서
+            from emp e inner join dept d
+            on e.deptno = d.deptno
+            where d.deptno = 20;
+            
+select deptno, dname, count(
 
+;
 
+--짝수 급여등급이 가장 많은 부서를 구하시오 
+--출력: 부서번호, 부서명, 짝수 급여등급 사원 수 
 
+select e.deptno, e.sal,g.grade from emp e
+inner join grade g
+on e.sal between g.losal and g.hisal
+where mod(g.grade,2)=0;
 
+select * from(
+    select count(e.deptno) cnt, g.grade, rank()over(order by count(e.deptno)) as rank from emp e
+    inner join grade g
+        on e.sal between g.losal and g.hisal
+        group by g.grade
+        having mod(g.grade,2)=0
+)where cnt = 1
+;
 
+select * from(
+select d.deptno, d.dname, count(e.deptno) cnt, rank()over(order by count(e.deptno) desc) as rank
+            from dept d inner join emp e
+                                on d.deptno = e.deptno
+                        inner join grade g
+                                on e.sal between g.losal and g.hisal
+                                and mod(g.grade,2)=0
+        group by d.deptno, d.dname 
+        ) where rank = 1
+;
 
-
-
-
+select  count(e.deptno), g.grade, d.dname from emp e
+inner join dept d
+    on e.deptno = d.deptno
+inner join grade g
+    on e.sal between g.losal and g.hisal
+    group by g.grade
+    having mod(g.grade,2)=0
+;
