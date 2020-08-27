@@ -116,7 +116,7 @@ select e.ename as mgr_name, e.sal as mgr_sal, g.grade as mgr_grade from emp e
             on e.sal between g.losal and g.hisal
         inner join emp em
             on e.empno = em.mgr
-;--그래서 컬럼수를 줄임(답을 참고하기 시작함)
+;--그래서 컬럼수를 줄임(답을 참고하기 시작함)`
 
 
             
