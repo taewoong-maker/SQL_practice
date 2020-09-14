@@ -147,5 +147,21 @@ select * from emp order by sal;
 
 
 
+create table test01(
+    user_code varchar2(20),
+    reply_num number,
+    rev_num varchar2(20),
+    code number,
+    CONSTRAINT test1 PRIMARY KEY (user_code, reply_num, code)
+    );
+
+insert into test01 values ('aa', 12, 'aa', 12);
+
+insert into test01(user_code, rev_num, code) values ('aa', 'aa', 12);
+
+
+
+
+
 
                 
