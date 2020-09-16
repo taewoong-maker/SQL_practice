@@ -380,35 +380,92 @@ select s.schedule_code, s.schedule_date, s.theater_code, s.mov_detail_code, d.mo
                 order by s.theater_code;
         
 --ÀÜ¿©¼® »Ì´Â Äõ¸®        
-select s.schedule_code, to_char(s.schedule_date,'yy/mm/dd') as schedule_date,
-                  s.theater_code, s.mov_detail_code, d.mov_code, d.mov_type, nvl(a.count,0) as count, nvl(b.count,0) as bcount
-                        from mov_schedule s 
-                            inner join mov_detail d 
-                                        on d.mov_code = 1000
-                                        and d.mov_detail_code=s.mov_detail_code 
-                                            and schedule_date between '20/09/20' and '20/09/21' 
-                            left outer join (select count(booked_tf) as count, schedule_code 
-                                                from mov_booked_seat bs 
-                                                where  booked_tf=0
-                                                group by schedule_code) a 
-                                         on a.schedule_code=s.schedule_code 
-                            left outer join (select count(booked_tf) as count, schedule_code 
-                                                from mov_booked_seat bs 
-                                                where  booked_tf=1
-                                                group by schedule_code) b 
-                                         on b.schedule_code=s.schedule_code 
-                        order by s.theater_code ;
-
-select * from guest where wdate = to_char('20/08/26','yy/mm/dd');
-select * from guest;
-desc guest;
+select s.schedule_code, to_char(s.schedule_date,'mm') as schedule_month,
+    to_char(s.schedule_date,'dd') as schedule_date,
+    s.theater_code, s.mov_detail_code, d.mov_code, d.mov_type,
+    nvl(a.count,0) as count, nvl(b.count,0) as bcount
+        from mov_schedule s 
+            inner join mov_detail d 
+                on d.mov_code = 1000
+                and d.mov_detail_code=s.mov_detail_code 
+                    and to_char(schedule_date,'dd') between '20' and '21' 
+            left outer join (select count(booked_tf) as count, schedule_code 
+                        from mov_booked_seat bs 
+                        where  booked_tf=0
+                        group by schedule_code) a 
+                 on a.schedule_code=s.schedule_code 
+            left outer join (select count(booked_tf) as count, schedule_code 
+                        from mov_booked_seat bs 
+                        where  booked_tf=1
+                        group by schedule_code) b 
+                 on b.schedule_code=s.schedule_code 
+        order by s.theater_code ;
 
 select count(*) as count from mov_star_log where user_code=1111;
 select * from mov_star_log;
-desc mov_star_log;
+select star_score from mov_star_log where mov_code=1000 and user_code = 6000;
 
 select * from mov_star;
+desc mov_star_log;
+
 insert into mov_star values(1000,8.8,1);
 insert into mov_star values(1001,8.6,1);
 insert into mov_star values(1002,7.8,1);
-select * from mov_info;
+
+select * from mov_star;
+select * from mov_star_log;
+delete from mov_star_log;
+commit;
+select user_code from MOV_USER where user_id = 'blue';
+select * from mov_user;
+commit;
+
+select user_code from MOV_USER where user_id = 'blue';
+desc mov_user;
+
+CREATE TABLE MOV_USER(
+USER_CODE NUMBER(8) PRIMARY KEY, --60ºÎÅÍ ½ÃÀÛÇÏ´Â ³×ÀÚ¸® ½ÃÄö½º
+USER_ID VARCHAR2 (20) UNIQUE,
+USER_PWD VARCHAR2(35) NOT NULL,
+USER_NICK VARCHAR2(35) UNIQUE,
+USER_TEL NUMBER(20) NOT NULL,
+USER_ADDR VARCHAR2(50),
+USER_ADDR2 VARCHAR2(100),
+USER_EMAIL VARCHAR2(50),
+USER_BIRTH DATE
+);
+
+create sequence seq_user 
+start with 6000
+increment by 1;
+
+commit;
+
+select * from mov_schedule;
+ 
+select * from (select to_char(schedule_date,'mm/dd') schedule from mov_schedule)
+where schedule between '09/20' and '09/22'
+group by schedule
+order by schedule
+;
+
+select * from (
+        select to_char(schedule_date,'mm/dd') schedule from mov_schedule
+        ) 
+    group by schedule
+    order by schedule
+;
+
+select to_char(s.schedule,'mm') scheduleMonth from(
+
+select * from (
+        select to_char(schedule_date,'mm/dd') schedule from mov_schedule
+        ) 
+    group by schedule
+    order by schedule
+    ) s ;
+
+
+
+
+
