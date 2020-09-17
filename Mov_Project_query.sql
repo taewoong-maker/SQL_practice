@@ -136,6 +136,16 @@ create sequence seq_reserve
 start with 10000000000
 increment by 1;
 
+select * from mov_revBoard;
+select * from mov_replyBoard;
+insert into mov_revBoard values(1,'woong','6000',sysdate,0,0,0,null,1000);
+commit;
+select rownum rn, r.* from mov_replyboard r;
+select rownum rn, r.* from mov_replyboard r where rev_num=1;
+select * from mov_seat;
+
+ALTER TABLE MOV_REVBOARD ADD REV_CONTENT VARCHAR(1000) DEFAULT '' NOT NULL;
+ALTER TABLE MOV_REPLYBOARD ADD REPLY_WRITEDATE VARCHAR(1000) DEFAULT SYSDATE NOT NULL;
 
 CREATE TABLE MOV_RESERVE(
 	RESERVE_CODE NUMBER(12) PRIMARY KEY, --½ÃÄö½º(12ÀÚ¸® 1000-0000-0000)
@@ -388,7 +398,7 @@ select s.schedule_code, to_char(s.schedule_date,'mm') as schedule_month,
             inner join mov_detail d 
                 on d.mov_code = 1000
                 and d.mov_detail_code=s.mov_detail_code 
-                    and to_char(schedule_date,'dd') between '20' and '21' 
+                    and to_char(schedule_date,'dd') ='23' 
             left outer join (select count(booked_tf) as count, schedule_code 
                         from mov_booked_seat bs 
                         where  booked_tf=0
@@ -452,20 +462,36 @@ order by schedule
 select * from (
         select to_char(schedule_date,'mm/dd') schedule from mov_schedule
         ) 
+        
     group by schedule
     order by schedule
 ;
 
 select to_char(s.schedule,'mm') scheduleMonth from(
-
-select * from (
-        select to_char(schedule_date,'mm/dd') schedule from mov_schedule
-        ) 
-    group by schedule
-    order by schedule
-    ) s ;
-
-
-
-
+    select * from (
+            select to_char(schedule_date,'mm/dd') schedule from mov_schedule
+            ) 
+        group by schedule
+        order by schedule
+        ) s;
+        
+select d.mov_type ,to_char(s.schedule_date,'hh24:mi'),
+      nvl(a.count,80) as count, nvl(b.count,0) as bcount
+    from mov_schedule s
+        inner join mov_detail d
+            on d.mov_detail_code = s.mov_detail_code
+            and d.mov_code = '1001'
+--            and schedule_date like '%20/09/21%'
+            and to_char(schedule_date,'dd') ='21' 
+         left outer join (select count(booked_tf) as count, schedule_code  
+              from mov_booked_seat 
+                     where  booked_tf=0 
+                         group by schedule_code) a  
+              on a.schedule_code=s.schedule_code 
+         left outer join (select count(booked_tf) as count, schedule_code 
+                from mov_booked_seat  
+                                 where  booked_tf=1
+                                group by schedule_code) b 
+                on b.schedule_code=s.schedule_code    
+     order by to_char(s.schedule_date,'hh24:mi');
 
