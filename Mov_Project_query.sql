@@ -481,7 +481,6 @@ select d.mov_type ,to_char(s.schedule_date,'hh24:mi'),
         inner join mov_detail d
             on d.mov_detail_code = s.mov_detail_code
             and d.mov_code = '1001'
---            and schedule_date like '%20/09/21%'
             and to_char(schedule_date,'dd') ='21' 
          left outer join (select count(booked_tf) as count, schedule_code  
               from mov_booked_seat 
@@ -494,4 +493,34 @@ select d.mov_type ,to_char(s.schedule_date,'hh24:mi'),
                                 group by schedule_code) b 
                 on b.schedule_code=s.schedule_code    
      order by to_char(s.schedule_date,'hh24:mi');
+     
+
+
+select * from mov_detail where mov_detail_code=2000;
+select * from mov_schedule where schedule_code = 30000000;
+
+select mov_code from mov_detail where mov_detail_code=2000;
+select * from mov_schedule where  mov_detail_code=2000;
+
+select * from mov_info
+    where mov_code = (select mov_code from mov_detail where mov_detail_code=2000);
+    
+--제목, 2D, 상영관, 상영등급, 날짜, 상영시간 //스케줄코드 3000000, 디테일코드 2000
+select de.mov_name, de.mov_age, de.mov_type, sc.theater_code,
+        to_char(sc.schedule_date,'mm/dd') scheduleDate,
+        to_char(sc.schedule_date,'hh:mi') scheduleTime
+from mov_schedule sc
+    inner join (select i.mov_name, i.mov_age, d.mov_type,d.mov_detail_code
+                    from mov_info i
+                        inner join mov_detail d
+                        on d.mov_code = i.mov_code
+                            and mov_detail_code = 2000) de
+        on de.mov_detail_code=sc.mov_detail_code
+            and schedule_code = 30000000;
+
+select i.mov_name, i.mov_age, d.mov_type,d.mov_detail_code
+from mov_info i
+inner join mov_detail d
+on d.mov_code = i.mov_code
+and mov_detail_code = 2000;
 
