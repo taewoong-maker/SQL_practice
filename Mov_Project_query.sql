@@ -524,3 +524,15 @@ inner join mov_detail d
 on d.mov_code = i.mov_code
 and mov_detail_code = 2000;
 
+select * from mov_price;
+select price*2 as price from mov_price where mov_type='2D' and person_type='성인';
+select sum(
+    (select nvl(price,0) from mov_price where mov_type='2D' and person_type='성인')
+    +(select nvl(price,0) from mov_price where mov_type='2D' and person_type='성인')
+) as sum from dual;
+
+price*2 as price from mov_price where mov_type=? and person_type=?
+
+
+
+
