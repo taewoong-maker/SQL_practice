@@ -525,14 +525,75 @@ on d.mov_code = i.mov_code
 and mov_detail_code = 2000;
 
 select * from mov_price;
+select price_code from mov_price where mov_type='2D' and person_type='己牢';
 select price*2 as price from mov_price where mov_type='2D' and person_type='己牢';
 select sum(
     (select nvl(price,0) from mov_price where mov_type='2D' and person_type='己牢')
     +(select nvl(price,0) from mov_price where mov_type='2D' and person_type='己牢')
 ) as sum from dual;
 
-price*2 as price from mov_price where mov_type=? and person_type=?
+desc mov_booked_seat;
+select * from mov_booked_seat order by mov_seat_code;
+desc mov_seat;
+desc mov_reserve;
+desc mov_reserve_log;
+select * from mov_reserve;
+select * from mov_seat;
+select * from mov_price;
+select * from mov_reserve;
+delete from mov_reserve;
+commit;
+
+select mov_seat_code from mov_seat where theater_code='1' and seat_num='a1';
+select booked_seat_code from mov_booked_seat where schedule_code='30000000' and MOV_SEAT_CODE='100';
+
+select mov_seat_code from mov_seat where theater_code='1' and seat_num='b2';
+
+alter table mov_reserve modify (PRICE_CODE varchar2(4)); 
+alter table mov_reserve modify (reserved_time varchar2(100)); 
+alter table mov_reserve_log modify (reserved_time varchar2(100)); 
+alter table mov_reserve_log modify (reserve_group_code varchar2(100)); 
+
+commit;
+
+select * from mov_info;
 
 
+insert into mov_reserve values (seq_reserve.nextval,?,?,to_char(sysdate,'yyyy-mm-dd hh24:mi'),
+            ?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd hh24:mi')) ;
 
+insert into mov_reserve values(seq_reserve.nextval,2002,30000242,to_char(sysdate,'YYYY-MM-DD hh24:mi'),
+            6000,5317,'b1',2,'己牢',to_char(sysdate,'yyyy-mm-dd hh24:mi'));
+
+ select i.mov_name,s.schedule_code,i.mov_code,s.theater_code, s.mov_detail_code,
+				        d.mov_type,i.mov_age, to_char(s.schedule_date,'yy/mm/dd')scheduleyear
+				        from mov_info i
+				            inner join mov_detail d
+				                on i.mov_code = d.mov_code
+				                 and i.mov_code = 1000
+				            inner join mov_schedule s 
+				                on s.mov_detail_code = d.mov_detail_code
+				                and  to_char(s.schedule_date,'dd') = '23';
+desc mov_booked_seat;
+select * from mov_booked_seat;
+delete mov_booked_seat;
+create sequence seq_booked_seat
+start with 5000
+increment by 1;
+
+
+select * from mov_reserve;
+select * from mov_reserve_log;
+desc mov_reserve_log;
+--5001
+
+select mov_seat_code from mov_booked_seat where booked_seat_code=5001;
+
+select seat_num from mov_seat where mov_seat_code=
+(select mov_seat_code from mov_booked_seat where booked_seat_code=5001);
+
+insert into mov_reserve_log (reserve_code, user_code,
+reserve_group_code,reserved_time,cancel_tf) 
+					 values (seq_reserve.currval,1000,to_char(sysdate,'yyyy-mm-dd hh24:mi'),
+					to_char(sysdate,'yyyy-mm-dd hh24:mi'),F);
 
