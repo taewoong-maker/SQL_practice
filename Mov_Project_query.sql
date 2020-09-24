@@ -417,6 +417,8 @@ select star_score from mov_star_log where mov_code=1000 and user_code = 6000;
 
 select * from mov_star;
 desc mov_star_log;
+select * from mov_noticeboard;
+insert into mov_noticeboard values(1000,8.8,1);
 
 insert into mov_star values(1000,8.8,1);
 insert into mov_star values(1001,8.6,1);
@@ -583,8 +585,31 @@ increment by 1;
 
 
 select * from mov_reserve;
+commit;
 select * from mov_reserve_log;
 desc mov_reserve_log;
+desc mov_reserve;
+select * from mov_detail;
+select * from mov_schedule;
+select * from mov_booked_seat;
+ALTER TABLE mov_reserve ADD UNIQUE (booked_seat_code);
+
+--ALTER TABLE mov_reserve' ADD CONSTRAINT 'mov_reserve_addunique' UNIQUE ('booked_seat_code');
+
+
+select * from mov_booked_seat;
+select * from mov_seat;
+
+select seat_num from mov_seat ms
+    inner join (select mov_seat_code
+                from mov_booked_seat where schedule_code=30000000) mbs
+        on ms.mov_seat_code=mbs.mov_seat_code;
+        
+        select mov_seat_code
+                from mov_booked_seat where mov_seat_code=30000000;
+
+
+
 --5001
 
 select mov_seat_code from mov_booked_seat where booked_seat_code=5001;
@@ -596,4 +621,5 @@ insert into mov_reserve_log (reserve_code, user_code,
 reserve_group_code,reserved_time,cancel_tf) 
 					 values (seq_reserve.currval,1000,to_char(sysdate,'yyyy-mm-dd hh24:mi'),
 					to_char(sysdate,'yyyy-mm-dd hh24:mi'),F);
+
 
