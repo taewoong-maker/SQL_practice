@@ -25,6 +25,7 @@ REV_FILE VARCHAR2(50),
 MOV_CODE NUMBER(8) NOT NULL
 );
 
+
 create sequence seq_replyboard
 increment by 1;
 
@@ -418,8 +419,8 @@ select star_score from mov_star_log where mov_code=1000 and user_code = 6000;
 select * from mov_star;
 desc mov_star_log;
 select * from mov_noticeboard;
-insert into mov_noticeboard values(1000,8.8,1);
-
+insert into mov_noticeboard values(1,'공지사항','woong','없음',sysdate,0,null);
+commit;
 insert into mov_star values(1000,8.8,1);
 insert into mov_star values(1001,8.6,1);
 insert into mov_star values(1002,7.8,1);
@@ -621,5 +622,13 @@ insert into mov_reserve_log (reserve_code, user_code,
 reserve_group_code,reserved_time,cancel_tf) 
 					 values (seq_reserve.currval,1000,to_char(sysdate,'yyyy-mm-dd hh24:mi'),
 					to_char(sysdate,'yyyy-mm-dd hh24:mi'),F);
+
+select * from mov_admin;
+insert into mov_admin values(8888,'nutopie','1234','admin1');
+insert into mov_admin values(9999,'red','1234','admin2');
+commit;
+select * from mov_info;
+delete mov_info where mov_code>1010;
+commit;
 
 
